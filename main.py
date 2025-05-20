@@ -153,7 +153,6 @@ def main():
                     batch_size //= 2
                     if batch_size <= 0:
                         raise e
-
     wandb.summary.update({"Datasets Evaluation": table, "finish_flag": True})
 
 

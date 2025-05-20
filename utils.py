@@ -6,7 +6,6 @@ from typing import Iterable
 
 import numpy as np
 import torch
-from dotenv import load_dotenv
 from gluonts.dataset import DataBatch, Dataset
 from gluonts.dataset.field_names import FieldName
 from gluonts.itertools import (
@@ -245,17 +244,17 @@ def get_dataset(args, ds_name, term):
     args.ds_name = ds_name
     args.term = term
     is_text_dataset = "time-mmd" in ds_name
-    is_multimodal = ds_name in multi_modal_datasets
+    is_image_dataset = "mmsp" in ds_name
     # Initialize the dataset
     if is_text_dataset:
         dataset = TextMultiModalDataset(
             name=ds_name,
             term=term,
             indexed_sample=args.indexed_sample,
-            tokenizer_name=os.path.join(os.getenv("MODEL_PATH", "/data/hanlu/models/"), args.encoder_path)
+            tokenizer_name=os.path.join(os.getenv("MODEL_PATH", "./models/"), args.encoder_path)
         )
         args.use_text = True
-    elif is_multimodal:
+    elif is_image_dataset:
         dataset = ImageMultimodalDataset(
             name=ds_name,
             term=term,
@@ -266,7 +265,7 @@ def get_dataset(args, ds_name, term):
             norm_nwp=args.norm_nwp if hasattr(args, 'norm_nwp') else True,
             norm_stl=args.norm_stl if hasattr(args, 'norm_stl') else True,
             pretrain=args.pretrained,
-            encoder_path=os.path.join(os.getenv("MODEL_PATH", "/data/hanlu/models/"), args.encoder_path),
+            encoder_path=os.path.join(os.getenv("MODEL_PATH", "./models/"), args.encoder_path),
             wo_nwp=args.wo_nwp
         )
         if args.wo_nwp:
