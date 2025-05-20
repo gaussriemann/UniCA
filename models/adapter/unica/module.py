@@ -140,10 +140,10 @@ class UniCA(nn.Module):
         self.num_feat_dynamic = sum(self.d_feat_dynamic_real)
         self.num_past_feat_dynamic = sum(self.d_past_feat_dynamic_real)
         self.with_past = with_past
-        self.with_dc = with_dc
-        if with_dc:
-            self.num_feat_dynamic += len(self.c_feat_dynamic_cat)
-            self.num_past_feat_dynamic += len(self.c_past_feat_dynamic_cat)
+        # self.with_dc = with_dc
+        # if with_dc:
+        self.num_feat_dynamic += len(self.c_feat_dynamic_cat)
+        self.num_past_feat_dynamic += len(self.c_past_feat_dynamic_cat)
         self.scaler = StdScaler(dim=1, keepdim=True)
 
         self.target_proj = nn.Linear(in_features=1, out_features=self.d_var)

@@ -41,6 +41,7 @@ datasets_dict = {
     "epf_sub": "epf/EPF_BE epf/EPF_DE epf/EPF_FR epf/EPF_NP epf/EPF_PJM".split(),
     "cov_all": "bull cockatoo covid19_energy gfc12_load gfc14_load gfc17_load hog pdb spain epf/EPF_test m5/M5_test retail/test".split(),
     "mmsp": "mmsp".split(),
+    "m5": "m5/M5_test".split(),
     "time-mmd-sub": "time-mmd/Public_Health time-mmd/Traffic time-mmd/Climate time-mmd/Energy time-mmd/Security time-mmd/Environment time-mmd/SocialGood".split(),
     'time-mmd/Public_Health': 'time-mmd/Public_Health'.split(),
     'time-mmd/Traffic': 'time-mmd/Traffic'.split(),

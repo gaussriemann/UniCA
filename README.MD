@@ -48,9 +48,19 @@ export MODEL_PATH=/your/pretrained/model/path
 export DATA_PATH=/your/dataset/path
 ```
 
-### 2. Data Preparation
+### 2. Pretrained Model
 
-Download the datasets from [drive](...) and place them in the `[DATA_PATH]` directory. The directory structure should
+In the paper, we apply UniCA on the following two TSFMs:
+
+- [Chronos-Bolt-base](https://huggingface.co/amazon/chronos-bolt-base)
+- [TimesFM-2-500m](https://huggingface.co/google/timesfm-2.0-500m-pytorch)
+
+You can download the pretrained models from Hugging Face and place them in the `[MODEL_PATH]` directory.
+
+
+### 3. Data Preparation
+
+Download the datasets from [drive](https://drive.google.com/file/d/166YnyeFcVYKXNL8MyU2cp6jd9cAnSaIH/view) and place them in the `[DATA_PATH]` directory. The directory structure should
 look like this:
 
 ```bash
@@ -61,7 +71,7 @@ look like this:
 └── ...
 ```
 
-### 3. Reproduce results in paper
+### 4. Reproduce results in paper
 
 To reproduce the results in the paper, run the following command:
 

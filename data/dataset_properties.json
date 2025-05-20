@@ -155,47 +155,47 @@
     "num_variates": 2
   },
   "bull": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "cockatoo": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "covid19_energy": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "gfc12_load": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "gfc14_load": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "gfc17_load": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "hog": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "pdb": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
   "spain": {
-    "domain": "Web/CloudOps",
+    "domain": "Energy",
     "frequency": "H",
     "num_variates": 7
   },
@@ -205,22 +205,22 @@
     "num_variates": 7
   },
   "Algriculture": {
-    "domain": "Nature",
+    "domain": "Algriculture",
     "frequency": "W",
     "num_variates": 7
   },
   "Economy": {
-    "domain": "Nature",
+    "domain": "Economy",
     "frequency": "W",
     "num_variates": 7
   },
   "Public_Health": {
-    "domain": "Nature",
+    "domain": "Health",
     "frequency": "W",
     "num_variates": 7
   },
   "Traffic": {
-    "domain": "Nature",
+    "domain": "Traffic",
     "frequency": "W",
     "num_variates": 7
   },
@@ -230,12 +230,12 @@
     "num_variates": 7
   },
   "Energy": {
-    "domain": "Nature",
+    "domain": "Energy",
     "frequency": "W",
     "num_variates": 7
   },
   "Security": {
-    "domain": "Nature",
+    "domain": "Security",
     "frequency": "W",
     "num_variates": 7
   },
@@ -245,7 +245,7 @@
     "num_variates": 7
   },
   "SocialGood": {
-    "domain": "Nature",
+    "domain": "Social",
     "frequency": "W",
     "num_variates": 7
   },
