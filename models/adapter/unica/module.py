@@ -5,52 +5,25 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import torch
 import torch.nn as nn
-
+from einops import rearrange
 from gluonts.core.component import validated
 from gluonts.model import Input, InputSpec
 from gluonts.torch.distributions import Output
 from gluonts.torch.distributions.quantile_output import QuantileOutput
-from gluonts.torch.scaler import StdScaler
-from gluonts.torch.util import weighted_average
-
-from einops import rearrange
 from gluonts.torch.modules.feature import FeatureEmbedder as BaseFeatureEmbedder
-
-from transformers import AutoConfig, AutoModel
+from gluonts.torch.scaler import StdScaler
+from transformers import AutoConfig
 
 from models.adapter.layers import (
     FeatureEmbedder,
     FeatureProjector,
     GatedResidualNetwork,
-    TemporalFusionDecoder,
-    TemporalFusionEncoder,
-    GatedLinearUnit,
     ParameterizedGatedLinearUnit,
-    VariableSelectionNetwork,
-    VariableAggregationNetwork, CrossAttentionLayer, ConditionalGlobalAttention,
-    fix_attention_mask
+    VariableSelectionNetwork
 )
 from models.wrapper.fm.base import FMWrapperBase
 
 logger = logging.getLogger(__name__)
-
-
-def zero_masked_rows(output, mask):
-    """
-    Set output vectors to zero for rows where the attention mask is all True.
-
-    Args:
-        output: Tensor of shape [batch_size, seq_len, hidden_dim]
-        mask: Boolean mask of shape [batch_size, seq_len]
-              where True means token is masked (invalid)
-
-    Returns:
-        Modified output with zero vectors for completely masked rows
-    """
-    # Find rows where all tokens are masked (all True in the mask)
-    all_masked = mask.all(dim=-1, keepdim=True)
-    # Zero out those rows in the output
-    return output * (~all_masked)
 
 
 class FlattenFeatureEmbedding(nn.Module):
@@ -71,14 +44,6 @@ class FlattenFeatureEmbedding(nn.Module):
 
 
 class UniCA(nn.Module):
-    """
-    Temporal Fusion Transformer neural network.
-
-    Partially based on the implementation in github.com/kashif/pytorch-transformer-ts.
-
-    Inputs feat_static_real, feat_static_cat and feat_dynamic_real are mandatory.
-    Inputs feat_dynamic_cat, past_feat_dynamic_real and past_feat_dynamic_cat are optional.
-    """
 
     @validated()
     def __init__(self, context_length: int, prediction_length: int, model_wrapper: Optional[FMWrapperBase] = None,

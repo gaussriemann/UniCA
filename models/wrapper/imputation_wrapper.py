@@ -1,16 +1,13 @@
-from typing import Iterable, Union, Optional
+from typing import Iterable
 
 import numpy as np
 from gluonts.dataset import Dataset, DataEntry
-from gluonts.model import Estimator, Predictor
-# from gluonts.mx import GluonEstimator
-from gluonts.torch import PyTorchPredictor, PyTorchLightningEstimator
-# from gluonts.torch.model.estimator import PyTorchLightningEstimator
+from gluonts.model import Estimator
+from gluonts.torch import PyTorchPredictor
 from gluonts.transform import (
     SimpleTransformation,
     DummyValueImputation, Transformation)
 from lightning import pytorch as pl
-from torch.utils.data import DataLoader
 
 
 class AllFieldImputation(SimpleTransformation):

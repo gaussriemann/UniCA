@@ -24,8 +24,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(na
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 
-# specialized_model = "feedforward patchtst tft".split()
-
 specialized_model_map = {
     "feedforward": SimpleFeedForwardEstimator,
     "patchtst": PatchTSTEstimator,

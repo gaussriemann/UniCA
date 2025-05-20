@@ -1,25 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Quick Start: Running Chronos model on gift-eval benchmark
-# 
-# This notebook shows how to run Chronos model on the gift-eval benchmark.
-# 
-# Make sure you download the gift-eval benchmark and set the `GIFT-EVAL` environment variable correctly before running this notebook.
-# 
-# We will use the `Dataset` class to load the data and run the model. If you have not already please check out the [dataset.ipynb](./dataset.ipynb) notebook to learn more about the `Dataset` class. We are going to just run the model on two datasets for brevity. But feel free to run on any dataset by changing the `short_datasets` and `med_long_datasets` variables below.
-
-# Install Chronos package:
-# ``
-# pip install git+https://github.com/amazon-science/chronos-forecasting.git
-# ``
 
 import json
 import logging
 import os
 import warnings
 
-import numpy as np
 import torch
 import wandb
 from gluonts.model import evaluate_model
@@ -170,7 +154,6 @@ def main():
                     if batch_size <= 0:
                         raise e
 
-            # wandb.summary["Datasets Evaluation"] = table
     wandb.summary.update({"Datasets Evaluation": table, "finish_flag": True})
 
 

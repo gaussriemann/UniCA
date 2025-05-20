@@ -35,14 +35,6 @@ class FlattenFeatureEmbedding(nn.Module):
 
 
 class SFTModel(nn.Module):
-    """
-    Temporal Fusion Transformer neural network.
-
-    Partially based on the implementation in github.com/kashif/pytorch-transformer-ts.
-
-    Inputs feat_static_real, feat_static_cat and feat_dynamic_real are mandatory.
-    Inputs feat_dynamic_cat, past_feat_dynamic_real and past_feat_dynamic_cat are optional.
-    """
 
     @validated()
     def __init__(
@@ -92,82 +84,6 @@ class SFTModel(nn.Module):
                 "past_observed_values": Input(
                     shape=(batch_size, self.context_length), dtype=torch.float
                 ),
-                # "feat_static_real": Input(
-                #     shape=(batch_size, sum(self.d_feat_static_real)),
-                #     dtype=torch.float,
-                # ),
-                # "item_index": Input(
-                #     shape=(batch_size, 1),
-                #     dtype=torch.long,
-                # ),
-                # "feat_static_cat": Input(
-                #     shape=(batch_size, len(self.c_feat_static_cat)),
-                #     dtype=torch.long,
-                # ),
-                # "feat_dynamic_real": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length + self.prediction_length,
-                #         sum(self.d_feat_dynamic_real),
-                #     ),
-                #     dtype=torch.float,
-                # ),
-                # "observed_feat_dynamic_real": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length + self.prediction_length,
-                #         sum(self.d_feat_dynamic_real),
-                #     ),
-                #     dtype=torch.float,
-                # ),
-                # "feat_dynamic_cat": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length + self.prediction_length,
-                #         len(self.c_feat_dynamic_cat),
-                #     ),
-                #     dtype=torch.long,
-                # ),
-                # "observed_feat_dynamic_cat": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length + self.prediction_length,
-                #         len(self.c_feat_dynamic_cat),
-                #     ),
-                #     dtype=torch.float,
-                # ),
-                # "past_feat_dynamic_real": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length,
-                #         sum(self.d_past_feat_dynamic_real),
-                #     ),
-                #     dtype=torch.float,
-                # ),
-                # "past_observed_feat_dynamic_real": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length,
-                #         sum(self.d_past_feat_dynamic_real),
-                #     ),
-                #     dtype=torch.float,
-                # ),
-                # "past_feat_dynamic_cat": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length,
-                #         len(self.c_past_feat_dynamic_cat),
-                #     ),
-                #     dtype=torch.long,
-                # ),
-                # "past_observed_feat_dynamic_cat": Input(
-                #     shape=(
-                #         batch_size,
-                #         self.context_length,
-                #         len(self.c_past_feat_dynamic_cat),
-                #     ),
-                #     dtype=torch.float,
-                # ),
             },
             torch.zeros,
         )
