@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=2
+export CUDA_VISIBLE_DEVICES=0
 # Climate
 python main.py --model_name ts_adapter/unica --base_model chronos_bolt_base --datasets time-mmd/Climate --num_workers 0 --num_batches_per_epoch 20 --indexed_sample --split_val --gradient_clip 1.0 --batch_size 32 --lr 1e-5 --max_epochs 100 --d_multi_modal 32 --dropout 0.5 --weight_decay 0.1 --with_future --future_with_gate --only_quantile_loss --normalized_loss --sample_output
 # Energy

@@ -1,4 +1,4 @@
-export CUDA_VISIBLE_DEVICES=1
+export CUDA_VISIBLE_DEVICES=0
 
 python main.py --model_name ts_adapter/unica --base_model chronos_bolt_base --with_gate --with_future --future_with_gate --datasets mmsp --num_workers 0 --num_batches_per_epoch 20 --indexed_sample --indexed_sample --split_val --gradient_clip 0.1 --d_multi_modal 1 --batch_size 8 --lr 1e-06
 python main.py --model_name ts_adapter/unica --base_model chronos_bolt_base --with_gate --with_future --future_with_gate --datasets mmsp --wo_nwp --num_workers 0 --num_batches_per_epoch 20 --max_epochs 100 --indexed_sample --split_val --gradient_clip 0.1 --d_multi_modal 1 --batch_size 8 --lr 1e-06
