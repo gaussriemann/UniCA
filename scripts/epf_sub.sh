@@ -7,9 +7,10 @@ python main.py --model_name ts_adapter/unica \
  --max_epochs 100 --indexed_sample --split_val \
  --gradient_clip 0.1 --batch_size 128
 
-python main.py --model_name ts_adapter/unica \
+CUDA_VISIBLE_DEVICES=1 python main.py --model_name ts_adapter/unica \
  --base_model timesfm_2_500m \
- --with_gate --with_future --future_with_gate \
- --with_dc --datasets epf_sub --num_workers 4 \
+ --with_gate --datasets epf_sub --num_workers 4 \
  --num_batches_per_epoch 50 --max_epochs 100 \
- --indexed_sample --split_val --gradient_clip 0.1 --batch_size 64
+ --indexed_sample --split_val --gradient_clip 0.1 --batch_size 64 \
+ --only_quantile_loss
+

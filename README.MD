@@ -73,6 +73,13 @@ look like this:
 
 ### 4. Reproduce results in paper
 
+This repo uses `wandb` to log the training process. You can set up your `wandb` account and login before running the
+code:
+
+```bash
+wandb login
+```
+
 To reproduce the results in the paper, run the following command:
 
 - For unimodal time series forecasting:
@@ -98,6 +105,9 @@ bash scripts/mmsp.sh
 ```bash
 bash scripts/time-mmd.sh
 ```
+
+The results are logged to the `Datasets Evaluation` table.
+
 
 ---
 
