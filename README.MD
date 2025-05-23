@@ -91,7 +91,7 @@ bash scripts/unimodal.sh
 - For EPF subsets time series forecasting:
 
 ```bash
-bash scripts/epf.sh
+bash scripts/epf_sub.sh
 ```
 
 - For MMSP (image + time series) multimodal forecasting:
