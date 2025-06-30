@@ -1,6 +1,6 @@
 # UniCA: Adapting Time Series Foundation Model to General Covariate-Aware Forecasting
 
-Official implementation of **UniCA**, a unified framework for adapting Time Series Foundation Models (TSFMs) to
+Official implementation of [UniCA](https://arxiv.org/abs/2506.22039), a unified framework for adapting Time Series Foundation Models (TSFMs) to
 general covariate-aware forecasting tasks, including heterogeneous and multimodal inputs.
 
 ---
@@ -13,6 +13,9 @@ handle *heterogeneous covariates* (e.g., categorical features, images, text). **
 * **Covariate Homogenization**: Transforms diverse covariates into a high-order homogeneous representation.
 * **Attention-based Fusion**: Integrates covariate features while preserving TSFM’s temporal modeling capacity.
 * **Plug-and-Play Adaptation**: UniCA acts as an adapter module that does **not modify** pretrained TSFM parameters.
+
+
+![unica](images/method.png)
 
 UniCA supports a wide range of scenarios: single-modal, multimodal, homogeneous, and heterogeneous covariates.
 
