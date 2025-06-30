@@ -8,7 +8,12 @@ general covariate-aware forecasting tasks, including heterogeneous and multimoda
 ## 🧠 Overview
 
 Time Series Foundation Models (TSFMs) achieve impressive generalization through large-scale pretraining, but struggle to
-handle *heterogeneous covariates* (e.g., categorical features, images, text). **UniCA** addresses this limitation via:
+handle *heterogeneous covariates* (e.g., categorical features, images, text).
+
+<img alt="tsfm_adaptation" height="200" src="images/setting.png" width="400"/>
+
+
+**UniCA** addresses this limitation via:
 
 * **Covariate Homogenization**: Transforms diverse covariates into a high-order homogeneous representation.
 * **Attention-based Fusion**: Integrates covariate features while preserving TSFM’s temporal modeling capacity.
