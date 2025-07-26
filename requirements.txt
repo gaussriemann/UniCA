@@ -12,7 +12,10 @@ pyasn1_modules==0.4.1
 sentence_transformers==4.1.0
 statsforecast==1.7.8
 toolz==0.12.1
-torch==2.4.1
+torch
 tqdm==4.67.1
 transformers==4.47.1
 wandb
+chronos-forecasting
+timesfm
+einops
