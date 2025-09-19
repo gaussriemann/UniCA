@@ -4,6 +4,7 @@ import logging
 import os
 import warnings
 
+import pandas as pd
 import torch
 import wandb
 from gluonts.model import evaluate_model
@@ -91,8 +92,10 @@ def main():
         "domain",
         "num_variates",
     ])
-
+    with open("naive.json", "r") as f:
+        naive_results = json.load(f)
     terms = ["short"]
+    normalized_results = []
     for ds_name in tqdm(all_datasets):
         logger.info(f"Processing dataset: {ds_name}")
         for term in terms:
@@ -145,6 +148,19 @@ def main():
                         dataset_properties_map[ds_key]["num_variates"]
                     )
                     wandb.log({f"{ds_config} MAE[0.5]": res["MAE[0.5]"][0], "epoch": 1})
+                    normalize = ds_config in naive_results
+                    result_row = {
+                        "dataset": ds_config,
+                        "MAPE_norm": res["MAPE[0.5]"][0] / naive_results[ds_config]["MAPE"] if normalize else
+                        res["MAPE[0.5]"][0],
+                        "MSE_norm": res["MSE[0.5]"][0] / naive_results[ds_config]["MSE"] if normalize else
+                        res["MSE[0.5]"][0],
+                        "MAE_norm": res["MAE[0.5]"][0] / naive_results[ds_config]["MAE"] if normalize else
+                        res["MAE[0.5]"][0],
+                        "CRPS_norm": res["mean_weighted_sum_quantile_loss"][0] / naive_results[ds_config][
+                            "mean_CRPS"] if normalize else res["mean_weighted_sum_quantile_loss"][0],
+                    }
+                    normalized_results.append(result_row)
                     break
                 except torch.cuda.OutOfMemoryError as e:
                     print(
@@ -153,6 +169,14 @@ def main():
                     batch_size //= 2
                     if batch_size <= 0:
                         raise e
+
+    if normalized_results:
+        results_df = pd.DataFrame(normalized_results)
+        print("\nNormalized Results:")
+        print(results_df)
+        csv_path = f"{output_dir}/normalized_results.csv"
+        results_df.to_csv(csv_path, index=False)
+        print(f"\nResults saved to: {csv_path}")
     wandb.summary.update({"Datasets Evaluation": table, "finish_flag": True})
 
 
