@@ -1,0 +1,27 @@
+[project]
+name = "unica"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "autogluon-common==1.2",
+    "autogluon-core==1.2",
+    "autogluon-features==1.2",
+    "autogluon-tabular==1.2",
+    "autogluon-timeseries==1.2",
+    "chronos-forecasting>=1.5.0",
+    "datasets==3.2.0",
+    "einops>=0.8.1",
+    "gluonts==0.16.0",
+    "lightning==2.5.0.post0",
+    "pyarrow==18.1.0",
+    "pyasn1-modules==0.4.1",
+    "sentence-transformers==4.1.0",
+    "statsforecast==1.7.8",
+    "timesfm>=1.3.0",
+    "toolz==0.12.1",
+    "torch>=2.5.1",
+    "tqdm==4.67.1",
+    "transformers==4.47.1",
+    "wandb>=0.21.0",
+]
