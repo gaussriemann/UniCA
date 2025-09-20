@@ -9,6 +9,9 @@ from models.predictor.ChatTime.model.model import ChatTime
 
 
 class ChatTimePredictor:
+    """
+    Download the pretrained checkpoints here: https://huggingface.co/ChengsenWang/ChatTime-1-7B-Chat
+    """
     def __init__(
             self,
             model_path,

@@ -1,3 +1,5 @@
+# cloned from ChatTime repo: https://github.com/ForestsKing/ChatTime.git
+
 import re
 from statistics import mode
 
