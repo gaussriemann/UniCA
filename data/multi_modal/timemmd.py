@@ -342,6 +342,8 @@ class TextMultiModalDataset(Dataset, gluonts.dataset.Dataset):
             elif 'llama' in model_type:
                 logger.info(f"Llama tokenizer {model_type}")
                 text_data = self.encode_with_llama(cleaned_texts)
+            elif "chattime" in model_type:
+                text_data = np.array(cleaned_texts)
             else:
                 model = SentenceTransformer(self.tokenizer_name)
                 text_data = model.encode(cleaned_texts,
@@ -366,7 +368,7 @@ class TextMultiModalDataset(Dataset, gluonts.dataset.Dataset):
             FieldName.TARGET: target.astype(np.float32),
             FieldName.START: pd.Timestamp(self.dates[idx]).to_period('h'),
             FieldName.ITEM_ID: f"item_{idx}",
-            "text_data": text_feat.astype(np.float32).T,
+            "text_data": text_feat.astype(np.float32).T if "chattime" not in self.tokenizer_name else text_feat.T,
             "freq": self.freq
         }
 

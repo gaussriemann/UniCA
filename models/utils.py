@@ -221,6 +221,17 @@ def get_predictor(args, dataset, season_length, ds_config, pl_logger=None, load_
                     prediction_length=dataset.prediction_length,
                     device_map="cuda:0",
                 )
+            elif "chattime" in name:
+                from models.predictor.chattime import ChatTimePredictor
+                logger.info(f"Using {name} predictor")
+                name_path_map = {"chattime": os.path.join(model_dir, "ChatTime-1-7B-Chat")}
+                predictor = ChatTimePredictor(
+                    model_path=name_path_map[name],
+                    prediction_length=dataset.prediction_length,
+                    context_length=12,
+                    ds_freq=dataset.freq,
+                    device_map="cuda:0",
+                )
             elif "moirai" in name:
                 logger.info(f"Using {name} predictor")
 
