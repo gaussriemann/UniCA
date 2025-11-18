@@ -20,6 +20,11 @@ def get_model(name, **kwargs):
         from .sft.module import SFTModel
         logger.info("Using SFT model")
         return SFTModel(**kwargs)
+    elif name in {"linear", "linear_regression"}:
+        from models.adapter.linear import LinearCovariateAdapter
+
+        logger.info("Using linear covariate adapter")
+        return LinearCovariateAdapter(**kwargs)
     else:
         raise ValueError(f"Unknown model: {name}")
 

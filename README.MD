@@ -116,6 +116,36 @@ bash scripts/time-mmd.sh
 
 The results are logged to the `Datasets Evaluation` table.
 
+---
+
+## 🔧 Linear Covariate Adapter
+
+UniCA now exposes a *zero-shot* covariate adapter that mirrors the linear
+regression strategy introduced in the
+[TimesFM covariates notebook](https://github.com/google-research/timesfm/blob/master/v1/notebooks/covariates.ipynb).
+
+- The adapter fits a closed-form linear regression between contextual targets
+  and the available covariates (dynamic + static) to capture deterministic
+  effects.
+- Residuals are then passed to the frozen TSFM which forecasts future residuals.
+- Future covariate contributions are obtained via the same regression and added
+  back to the TSFM output (`y = y_residual + y_linear`).
+- If a covariate is only observed historically, the TSFM first forecasts its
+  future values so that the regression can still operate purely on
+  future-known signals.
+
+Use it by selecting the adapter name:
+
+```bash
+python main.py \
+  --model_name ts_adapter/linear_regression \
+  --base_model chronos_bolt_base \
+  --datasets cov_all --split_val
+```
+
+Substitute `--base_model timesfm_2_500m` to reproduce the TimesFM-style
+xreg+TSFM fusion on Google’s checkpoint.
+
 
 ---
 
@@ -123,5 +153,3 @@ The results are logged to the `Datasets Evaluation` table.
 
 UniCA consistently improves performance over strong TSFM baselines across multiple metrics (MAE, MAPE, CRPS, etc.) and
 covariate setups. See full results in our paper.
-
-
