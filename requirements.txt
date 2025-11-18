@@ -19,3 +19,4 @@ wandb
 chronos-forecasting
 timesfm
 einops
+momentfm

@@ -97,6 +97,9 @@ def get_fm_wrapper(model_type, model_id_or_path, ds_freq, prediction_length, onl
         return TimesFMWrapper(model_id_or_path, ds_freq=ds_freq, prediction_length=prediction_length,
                               only_quantile_loss=only_quantile_loss, normalized_loss=normalized_loss,
                               sample_output=kwargs["sample_output"])
+    elif model_type == "moment":
+        from models.wrapper.fm.moment_wrapper import MomentWrapper
+        return MomentWrapper(model_id_or_path, prediction_length=prediction_length)
     else:
         raise ValueError(f"Unknown model name: {model_type}")
 

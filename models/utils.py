@@ -108,6 +108,21 @@ def get_predictor(args, dataset, season_length, ds_config, pl_logger=None, load_
                             "model_id_or_path": os.path.join(model_dir, "timesfm-2.0-500m/torch_model.ckpt"),
                             "model_type": "timesfm",
                         },
+                    "moment_1_small":
+                        {
+                            "model_id_or_path": os.path.join(model_dir, "MOMENT-1-small"),
+                            "model_type": "moment",
+                        },
+                    "moment_1_base":
+                        {
+                            "model_id_or_path": os.path.join(model_dir, "MOMENT-1-base"),
+                            "model_type": "moment",
+                        },
+                    "moment_1_large":
+                        {
+                            "model_id_or_path": os.path.join(model_dir, "MOMENT-1-large"),
+                            "model_type": "moment",
+                        },
                 }
                 if args.sampler == "random":
                     from data.sampler import RandomSampler

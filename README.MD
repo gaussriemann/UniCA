@@ -58,12 +58,30 @@ export DATA_PATH=/your/dataset/path
 
 ### 2. Pretrained Model
 
-In the paper, we apply UniCA on the following two TSFMs:
+In the paper, we apply UniCA on the following TSFMs:
 
 - [Chronos-Bolt-base](https://huggingface.co/amazon/chronos-bolt-base)
 - [TimesFM-2-500m](https://huggingface.co/google/timesfm-2.0-500m-pytorch)
+- [MOMENT-1 (small/base/large)](https://huggingface.co/AutonLab/MOMENT-1-large)
 
-You can download the pretrained models from Hugging Face and place them in the `[MODEL_PATH]` directory.
+Download the checkpoints from Hugging Face (place each folder under `[MODEL_PATH]`). For MOMENT support make sure the
+`momentfm` Python package is installed (it is included in `requirements.txt`) and select the adapter with
+`--base_model moment_1_small|moment_1_base|moment_1_large`.
+
+To leverage MOMENT for anomaly detection instead of forecasting, instantiate the wrapper in anomaly mode:
+
+```python
+from models.wrapper.fm.moment_wrapper import MomentWrapper
+
+wrapper = MomentWrapper(
+    model_id_or_path=f"{MODEL_PATH}/MOMENT-1-base",
+    prediction_length=96,
+    moment_task="anomaly_detection",
+)
+scores, reconstruction = wrapper.detect_anomalies(context_tensor, observed_mask)
+```
+
+This runs MOMENT’s reconstruction head and returns per-timestep anomaly scores alongside the reconstructed signal.
 
 
 ### 3. Data Preparation
