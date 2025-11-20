@@ -4,6 +4,7 @@ import logging
 import multiprocessing as mp
 import pickle
 import sys
+from queue import Empty
 from dataclasses import dataclass
 from multiprocessing.reduction import ForkingPickler
 from typing import (
@@ -26,6 +27,15 @@ from pydantic import BaseModel
 
 T = TypeVar("T")
 logger = logging.getLogger(__name__)
+
+
+def _get_mp_context() -> mp.context.BaseContext:
+    if sys.platform == "darwin":
+        return mp.get_context("spawn")
+    try:
+        return mp.get_context("fork")
+    except ValueError:
+        return mp.get_context("spawn")
 
 
 class MixedRandomDataset(torch.utils.data.Dataset):
@@ -322,13 +332,13 @@ class MultiProcessLoader(DataLoader):
 
         self.decode_fn = decode_fn
         self.queue_timeout_seconds = queue_timeout_seconds
-        self.manager = mp.Manager()
-        self.output_queue = self.manager.Queue(maxsize=max_queue_size)
-        self.input_queues = [self.manager.Queue() for _ in range(num_workers)]
+        self.ctx = _get_mp_context()
+        self.output_queue = self.ctx.Queue(maxsize=max_queue_size)
+        self.input_queues = [self.ctx.Queue() for _ in range(num_workers)]
         self.num_workers = num_workers
 
         self.processes = [
-            mp.Process(
+            self.ctx.Process(
                 target=worker_fn,
                 kwargs={
                     "worker_id": worker_id,
@@ -349,7 +359,14 @@ class MultiProcessLoader(DataLoader):
         for input_queue in self.input_queues:
             input_queue.put(_encode(True))
         while num_finished < self.num_workers:
-            raw = self.output_queue.get(timeout=self.queue_timeout_seconds)
+            try:
+                raw = self.output_queue.get(timeout=self.queue_timeout_seconds)
+            except Empty:
+                logger.warning(
+                    "MultiProcessLoader timed out waiting for worker output. "
+                    "Continuing to wait..."
+                )
+                continue
             data = pickle.loads(raw)
             if data is None:
                 num_finished += 1
