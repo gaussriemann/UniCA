@@ -726,32 +726,39 @@ class TSAdapterEstimator(PyTorchLightningEstimator):
         else:
             ckpt_dir = None
 
-        checkpoint = pl.callbacks.ModelCheckpoint(
-            dirpath=ckpt_dir,
-            monitor=monitor, mode="min", verbose=True,
-        )
-        early_stop = pl.callbacks.EarlyStopping(
-            monitor=monitor, patience=20, mode="min", verbose=True, min_delta=1e-6
-        )
-        custom_callbacks = self.trainer_kwargs.pop("callbacks", [])
-        trainer = pl.Trainer(
-            logger=self.pl_logger,
-            **{
-                "accelerator": "auto",
-                "callbacks": [checkpoint, early_stop, lightning.pytorch.callbacks.ModelSummary(max_depth=2),
-                              NaNCheckCallback()] + custom_callbacks,
-                **self.trainer_kwargs,
-            }
-        )
+        has_trainable_params = any(p.requires_grad for p in training_network.parameters())
+        trainer = None
+        checkpoint = None
 
-        trainer.fit(
-            model=training_network,
-            train_dataloaders=training_data_loader,
-            val_dataloaders=validation_data_loader,
-            ckpt_path=ckpt_path,
-        )
+        if has_trainable_params:
+            checkpoint = pl.callbacks.ModelCheckpoint(
+                dirpath=ckpt_dir,
+                monitor=monitor, mode="min", verbose=True,
+            )
+            early_stop = pl.callbacks.EarlyStopping(
+                monitor=monitor, patience=20, mode="min", verbose=True, min_delta=1e-6
+            )
+            custom_callbacks = self.trainer_kwargs.pop("callbacks", [])
+            trainer = pl.Trainer(
+                logger=self.pl_logger,
+                **{
+                    "accelerator": "auto",
+                    "callbacks": [checkpoint, early_stop, lightning.pytorch.callbacks.ModelSummary(max_depth=2),
+                                  NaNCheckCallback()] + custom_callbacks,
+                    **self.trainer_kwargs,
+                }
+            )
+    
+            trainer.fit(
+                model=training_network,
+                train_dataloaders=training_data_loader,
+                val_dataloaders=validation_data_loader,
+                ckpt_path=ckpt_path,
+            )
+        else:
+            logger.info("Model has no trainable parameters; skipping trainer.fit() and using zero-shot weights.")
 
-        if checkpoint.best_model_path != "":
+       if checkpoint is not None and checkpoint.best_model_path != "":
             logger.info(
                 f"Loading best model from {checkpoint.best_model_path}"
             )
