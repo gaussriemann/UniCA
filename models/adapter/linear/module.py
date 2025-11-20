@@ -75,6 +75,11 @@ class LinearCovariateAdapter(nn.Module):
             distr_output = QuantileOutput(self.model_wrapper.quantiles)
         self.distr_output = distr_output
 
+        # Register a dummy buffer so that distributed training backends do not
+        # complain about parameter-less modules while still avoiding any trainable
+        # weights that would trigger optimizer steps.
+        self.register_buffer("_ddp_dummy", torch.zeros(1), persistent=False)
+
     # --------------------------------------------------------------------- #
     #  Lightning / GluonTS plumbing
     # --------------------------------------------------------------------- #
