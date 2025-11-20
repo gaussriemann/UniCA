@@ -117,8 +117,12 @@ class TSAdapterLightningModule(pl.LightningModule):
         """
         Returns the optimizer to use.
         """
+        trainable_params = list(filter(lambda p: p.requires_grad, self.model.parameters()))
+        if len(trainable_params) == 0:
+            logger.warning("No trainable parameters detected; skipping optimizer setup.")
+            return []
         optimizer = torch.optim.Adam(
-            filter(lambda p: p.requires_grad, self.model.parameters()),
+            trainable_params,
             lr=self.lr,
             weight_decay=self.weight_decay,
         )
