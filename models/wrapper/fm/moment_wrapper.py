@@ -40,7 +40,7 @@ class MomentWrapper(FMWrapperBase):
             device = "cuda" if torch.cuda.is_available() else "cpu"
         self.device = torch.device(device)
 
-        valid_tasks = {"forecasting", "anomaly_detection"}
+        valid_tasks = {"forecasting", "anomaly_detection", "imputation"
         if moment_task not in valid_tasks:
             raise ValueError(f"moment_task must be one of {valid_tasks}")
         self.moment_task = moment_task
@@ -49,7 +49,7 @@ class MomentWrapper(FMWrapperBase):
         model_kwargs = model_kwargs or {}
         if self.moment_task == "anomaly_detection":
             model_kwargs.setdefault("task_name", "reconstruction")
-        else:
+        elif self.moment_task == "imputation":
             model_kwargs.setdefault("task_name", "forecasting")
             model_kwargs.setdefault("forecast_horizon", prediction_length)
 
@@ -86,9 +86,11 @@ class MomentWrapper(FMWrapperBase):
     # Tokenize / Encode / Predict
     # ------------------------------------------------------------------ #
     def tokenize(self, inputs):
-        if self.moment_task != "forecasting":
-            raise RuntimeError("Tokenization is only available in forecasting mode. "
-                               "Use `detect_anomalies` for anomaly detection.")
+        if self.moment_task not in {"forecasting", "imputation"}:
+            raise RuntimeError(
+                "Tokenization is only available in forecasting or imputation mode. "
+                "Use `detect_anomalies` for anomaly detection."
+            )
 
         context = inputs["context"]
         if context.dim() == 1:
@@ -114,7 +116,7 @@ class MomentWrapper(FMWrapperBase):
         x_enc = torch.nan_to_num(x_enc, nan=0.0, posinf=0.0, neginf=0.0)
 
         x_enc = self.model.tokenizer(x=x_enc)
-        mask_for_embedding = torch.ones_like(observed)
+        mask_for_embedding = observed
         enc_in = self.model.patch_embedding(x_enc, mask=mask_for_embedding)
 
         batch_size, n_channels = context.shape[0], context.shape[1]
@@ -134,8 +136,8 @@ class MomentWrapper(FMWrapperBase):
         }
 
     def encode(self, inputs):
-        if self.moment_task != "forecasting":
-            raise RuntimeError("Encoding is only available in forecasting mode.")
+        if self.moment_task not in {"forecasting", "imputation"}:
+            raise RuntimeError("Encoding is only available in forecasting or imputation mode.")
 
         token_embeddings = inputs["token_embeddings"]
         attention_mask = inputs["attention_mask"]
@@ -183,6 +185,41 @@ class MomentWrapper(FMWrapperBase):
         prediction = forecast.squeeze(1).unsqueeze(-1)  # [B, H, Q]
 
         return {"prediction": prediction}
+
+    def reconstruct_from_encoded(self, inputs):
+        if self.moment_task != "imputation":
+            raise RuntimeError("Reconstruction can only be used when `moment_task='imputation'`.")
+
+        hidden_states = inputs["encoded_embeddings"]
+        dec_out = self.model.head(hidden_states)
+        mean, stdev = inputs["norm_stats"]
+        reconstruction = self._denormalize(dec_out, mean, stdev)
+
+        if reconstruction.dim() == 3 and reconstruction.size(1) == 1:
+            reconstruction = reconstruction.squeeze(1)
+
+        return {"reconstruction": reconstruction}
+
+    def impute(
+            self,
+            context: torch.Tensor,
+            observed_values: Optional[torch.Tensor] = None,
+            input_mask: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        if self.moment_task != "imputation":
+            raise RuntimeError("Instantiate MomentWrapper with `moment_task='imputation'` to run imputation.")
+        context, mask = self._prepare_series(context, observed_values)
+        if input_mask is None:
+            input_mask = torch.ones_like(mask)
+        outputs = self.model.reconstruct(
+            x_enc=context,
+            input_mask=input_mask,
+            mask=mask,
+        )
+        reconstruction = outputs.reconstruction
+        if reconstruction.dim() == 3 and reconstruction.size(1) == 1:
+            reconstruction = reconstruction.squeeze(1)
+        return reconstruction
 
     # ------------------------------------------------------------------ #
     # Helper utilities
