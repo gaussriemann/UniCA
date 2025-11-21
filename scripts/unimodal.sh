@@ -19,3 +19,9 @@ python main.py --model_name ts_adapter/unica \
  --max_epochs 100 --indexed_sample --split_val \
  --gradient_clip 0.1 --batch_size 64 --only_quantile_loss \
  --normalized_loss --sample_output
+
+python main.py \
+ --model_name ts_adapter/linear_regression \
+ --base_model chronos_bolt_base \
+ --datasets cov_all --split_val \
+ --num_workers 4  --batch_size 64
