@@ -23,6 +23,7 @@ handle *heterogeneous covariates* (e.g., categorical features, images, text).
 ![unica](images/method.png)
 
 UniCA supports a wide range of scenarios: single-modal, multimodal, homogeneous, and heterogeneous covariates.
+**New:** UniCA now supports MOMENT-based imputation (masking target variable and reconstructing with UniCA while MOMENT remains frozen).
 
 ---
 
